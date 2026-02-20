@@ -129,6 +129,8 @@ public:
   void setInterval  (uint16_t fast, uint16_t slow);
   void setIntervalMS(uint16_t fast, uint16_t slow);
 
+  void setPhy(uint8_t phy);
+
   uint16_t getInterval(void);
 
   bool setBeacon(BLEBeacon& beacon);
@@ -169,6 +171,8 @@ private:
 
   stop_callback_t _stop_cb;
   slow_callback_t _slow_cb;
+
+  uint8_t  _phy;
 
   // Internal function
   bool _start(uint16_t interval, uint16_t timeout);
