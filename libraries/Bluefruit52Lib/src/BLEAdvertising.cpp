@@ -265,6 +265,7 @@ BLEAdvertising::BLEAdvertising(void)
   _stop_timeout        = _left_timeout = 0;
   _stop_cb             = NULL;
   _slow_cb             = NULL;
+  _phy                 = BLE_GAP_PHY_AUTO;
 }
 
 void BLEAdvertising::setFastTimeout(uint16_t sec)
@@ -319,6 +320,11 @@ void BLEAdvertising::setPeerAddress(const ble_gap_addr_t& peer_addr) {
   _peer_addr = peer_addr;
 }
 
+void BLEAdvertising::setPhy(uint8_t phy)
+{
+  _phy = phy;
+}
+
 bool BLEAdvertising::isRunning(void)
 {
   return _running;
@@ -355,6 +361,13 @@ bool BLEAdvertising::_start(uint16_t interval, uint16_t timeout) {
     .secondary_phy = BLE_GAP_PHY_AUTO         , // 1 Mbps will be used
       // , .set_id, .scan_req_notification
   };
+  
+  // NEW: Use configured PHY if not set to AUTO
+  if (_phy != BLE_GAP_PHY_AUTO)
+  {
+    adv_para.primary_phy   = _phy;
+    adv_para.secondary_phy = _phy;
+  }
 
   switch(_type) {
     case BLE_GAP_ADV_TYPE_CONNECTABLE_NONSCANNABLE_DIRECTED_HIGH_DUTY_CYCLE:
